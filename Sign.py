@@ -33,12 +33,14 @@ def _gen_signed_cert(key, ca_key, ca_cert, cn):
     cert.sign(ca_key, SIGN_HASH_ALGO)
     return cert
 
-def main(ca_key_file, ca_cert_file, site_cn, key_filename, cert_filename):
-    ca_key = crypto.load_privatekey(crypto.FILETYPE_PEM, open(ca_key_file, 'r').read())
-    ca_cert = crypto.load_certificate(crypto.FILETYPE_PEM, open(ca_cert_file, 'r').read())
+def main(ca_name, site_cn):
+    ca_key = crypto.load_privatekey(crypto.FILETYPE_PEM, open(ca_name + '.pem', 'r').read())
+    ca_cert = crypto.load_certificate(crypto.FILETYPE_PEM, open(ca_name + '.crt', 'r').read())
     key = _gen_keypair()
-    open(key_filename, 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
-    open(cert_filename, 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, _gen_signed_cert(key, ca_key, ca_cert, site_cn)))
+    open('site_' + site_cn + '.pem', 'w').write(
+        crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
+    open('site_' + site_cn + '.crt', 'w').write(
+        crypto.dump_certificate(crypto.FILETYPE_PEM, _gen_signed_cert(key, ca_key, ca_cert, site_cn)))
 
 if __name__ == '__main__':
     main(*sys.argv[1:])

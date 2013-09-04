@@ -34,10 +34,10 @@ def _gen_selfsigned_cert(key):
     cert.sign(key, SIGN_HASH_ALGO)
     return cert
 
-def main(key_filename, cert_filename):
+def main(ca_name):
     key = _gen_keypair()
-    open(key_filename, 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
-    open(cert_filename, 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, _gen_selfsigned_cert(key)))
+    open(ca_name + '.pem', 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
+    open(ca_name + '.crt', 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, _gen_selfsigned_cert(key)))
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
