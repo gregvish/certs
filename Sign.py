@@ -9,8 +9,7 @@ CERT_VALIDITY_PERIOD = 10 * 365 * 24 * 60 * 60
 CERT_C = 'IL'
 CERT_ST = 'Tel Aviv'
 CERT_L = 'Tel Aviv'
-CERT_O  = 'TESTING'
-CERT_OU = 'TESTING'
+CERT_OU = 'Unit'
 
 def _gen_keypair():
     keypair = crypto.PKey()
@@ -22,8 +21,8 @@ def _gen_signed_cert(key, ca_key, ca_cert, cn):
     cert.get_subject().C = CERT_C
     cert.get_subject().ST = CERT_ST
     cert.get_subject().L = CERT_L
-    cert.get_subject().O = CERT_O
     cert.get_subject().OU = CERT_OU
+    cert.get_subject().O = cn
     cert.get_subject().CN = cn
     cert.set_serial_number(randint(0, 2**31))
     cert.gmtime_adj_notBefore(0)
