@@ -3,13 +3,13 @@ from random import randint
 import sys
 
 RSA_KEY_LENGTH = 2048
-SIGN_HASH_ALGO = 'sha1'
+SIGN_HASH_ALGO = 'sha256'
 CERT_VALIDITY_PERIOD = 10 * 365 * 24 * 60 * 60
 
-CERT_C = 'IL'
-CERT_ST = 'Tel Aviv'
-CERT_L = 'Tel Aviv'
-CERT_OU = 'Unit'
+CERT_C = 'US'
+CERT_ST = 'NY'
+CERT_L = 'NY'
+CERT_OU = 'Org'
 
 def _gen_keypair():
     keypair = crypto.PKey()
@@ -29,6 +29,11 @@ def _gen_selfsigned_cert(key, cn):
     cert.gmtime_adj_notAfter(CERT_VALIDITY_PERIOD)
     cert.set_issuer(cert.get_subject())
     cert.set_pubkey(key)
+    extensions = [
+        crypto.X509Extension('basicConstraints', False ,'CA:TRUE'),
+        crypto.X509Extension('subjectKeyIdentifier' , False , 'hash', subject=cert),
+    ]
+    cert.add_extensions(extensions)
     cert.sign(key, SIGN_HASH_ALGO)
     return cert
 
